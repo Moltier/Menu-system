@@ -443,4 +443,4 @@ class UI:
         self.menus["audio"].objects["music"].update_text(new_font_size=self.menu_font_size)
         self.menus["audio"].objects["sound"].update_text(new_font_size=self.menu_font_size)
 
-        self.menus["other menu"].objects["back"].update_text(new_font_size=self.menu_font_size)
+        self.menus["other"].objects["back"].update_text(new_font_size=self.menu_font_size)
