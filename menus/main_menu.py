@@ -18,7 +18,7 @@ def main_menu(ui, settings, program_data):
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:  # Left
                 for obj in ui.menus["main menu"].objects.values():
-                    if obj.collidepoint(mouse_pos):
+                    if obj.rect.collidepoint(mouse_pos):
                         obj.click()
                         return
 

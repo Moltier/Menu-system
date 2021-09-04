@@ -24,11 +24,11 @@ def display_menu(ui, settings, client_data):
                     pass
                 else:
                     for obj in ui.menus["display menu buttons"].objects.values():
-                        if obj.collidepoint(mouse_pos):
+                        if obj.rect.collidepoint(mouse_pos):
                             obj.click()
                             return
                     for obj in ui.menus["general options"].objects.values():
-                        if obj.collidepoint(mouse_pos):
+                        if obj.rect.collidepoint(mouse_pos):
                             obj.click()
                             return
 

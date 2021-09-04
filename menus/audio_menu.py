@@ -17,12 +17,9 @@ def audio_menu(ui, settings):
                 ui.start_transition_timer()
 
         elif event.type == pygame.MOUSEMOTION:
-            if ui.menus["audio menu bars"].objects["music"].background_rect.collidepoint(mouse_pos):
-                if ui.menus["audio menu bars"].objects["music"].down:
-                    ui.menus["audio menu bars"].objects["music"].set_bar_size(mouse_pos[0])
-            elif ui.menus["audio menu bars"].objects["sound"].background_rect.collidepoint(mouse_pos):
-                if ui.menus["audio menu bars"].objects["sound"].down:
-                    ui.menus["audio menu bars"].objects["sound"].set_bar_size(mouse_pos[0])
+            for obj in ui.menus["audio menu bars"].objects.values():
+                if obj.down:
+                    obj.set_bar_size(mouse_pos[0])
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:  # Left
@@ -31,7 +28,7 @@ def audio_menu(ui, settings):
                         obj.click()
                         return
                 for obj in ui.menus["general options"].objects.values():
-                    if obj.collidepoint(mouse_pos):
+                    if obj.rect.collidepoint(mouse_pos):
                         obj.click()
                         return
 
