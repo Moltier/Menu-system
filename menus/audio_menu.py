@@ -26,19 +26,14 @@ def audio_menu(ui, settings):
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:  # Left
-                if ui.menus["audio menu bars"].objects["music"].background_rect.collidepoint(mouse_pos):
-                    ui.menus["audio menu bars"].objects["music"].click()
-                elif ui.menus["audio menu bars"].objects["sound"].background_rect.collidepoint(mouse_pos):
-                    ui.menus["audio menu bars"].objects["sound"].click()
-
-                elif ui.menus["general options"].objects["save"].rect.collidepoint(mouse_pos):
-                    ui.menus["general options"].objects["save"].click()
-                elif ui.menus["general options"].objects["back"].rect.collidepoint(mouse_pos):
-                    ui.menus["general options"].objects["back"].click()
-                elif ui.menus["general options"].objects["reset"].rect.collidepoint(mouse_pos):
-                    ui.menus["general options"].objects["reset"].click()
-                elif ui.menus["general options"].objects["default"].rect.collidepoint(mouse_pos):
-                    ui.menus["general options"].objects["default"].click()
+                for obj in ui.menus["audio menu bars"].objects.values():
+                    if obj.background_rect.collidepoint(mouse_pos):
+                        obj.click()
+                        return
+                for obj in ui.menus["general options"].objects.values():
+                    if obj.collidepoint(mouse_pos):
+                        obj.click()
+                        return
 
         elif event.type == pygame.MOUSEBUTTONUP:
             if event.button == 1:  # Left
@@ -57,7 +52,6 @@ def audio_menu(ui, settings):
 
                 elif ui.menus["general options"].objects["back"].rect.collidepoint(mouse_pos):
                     if ui.menus["general options"].objects["back"].down:
-                        ui.menus["general options"].objects["back"].down = False
                         ui.next_mode = "options"
                         ui.start_transition_timer()
 
@@ -72,12 +66,8 @@ def audio_menu(ui, settings):
                         settings.reset_to_default(ui.mode)
                         ui.update_audio_levels(settings)
 
-                ui.menus["audio menu bars"].objects["music"].down = False
-                ui.menus["audio menu bars"].objects["sound"].down = False
-                ui.menus["general options"].objects["save"].down = False
-                ui.menus["general options"].objects["back"].down = False
-                ui.menus["general options"].objects["reset"].down = False
-                ui.menus["general options"].objects["default"].down = False
+                for obj in ui.menus["general options"].objects.values():
+                    obj.release()
 
 
 def draw_audio_menu(ui):

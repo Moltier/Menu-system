@@ -5,7 +5,7 @@ from Audio import sound_lib
 class Object:
     modified_color = (255, 127, 80)
 
-    def __init__(self, x, y, w, h, color=None, border_color=None):
+    def __init__(self, x, y, w, h, image_name=None, image_alpha=None, color=None, border_color=None):
         self.rect = pygame.Rect(0, 0, w, h)
         self.rect.center = (x, y)
         self.color = color
@@ -14,7 +14,19 @@ class Object:
         self.highlighted_color = [int(n * 1.5) if n * 1.5 <= 255 else int(n * 0.25) for n in self.color] if self.color else None
         self.modified = False
 
-        self.img_alpha = 255
+        self.image_name = image_name
+        self.image_alpha = image_alpha
+        self.image = None
+        self.update_img(self.image_name, self.image_alpha)
+
+    def update_img(self, image_name=None, image_alpha=None):
+        if image_name:
+            self.image_name = image_name
+            self.image = pygame.transform.scale(pygame.image.load(f"Images/{self.image_name}"), (self.rect.w, self.rect.h)).convert()
+
+        if image_alpha:
+            self.image_alpha = image_alpha
+            self.image.set_alpha(self.image_alpha)
 
     def draw(self, SCREEN, y_scroll=0, rect_highlight=False, dark=False):
         rect = self.rect.copy()
@@ -23,8 +35,11 @@ class Object:
             pygame.draw.rect(SCREEN, self.dark_color, rect)
         elif rect_highlight:
             pygame.draw.rect(SCREEN, self.highlighted_color, rect)
-        elif self.color:
+
+        if self.color:
             pygame.draw.rect(SCREEN, self.color, rect)
+        elif self.image_name:
+            SCREEN.blit(self.image, rect)
 
         if self.modified:
             pygame.draw.rect(SCREEN, Object.modified_color, rect, width=2)
@@ -35,10 +50,12 @@ class Object:
 class Button(Object):
     font_family = "comicsansms"
 
-    def __init__(self, x, y, w, h, dinamic=False, color=None, border_color=None, text="", text_color=(255, 255, 255),
-                 font_size=20, positioning="center"):
-        super().__init__(x, y, w, h, color, border_color)
+    def __init__(self, x, y, w, h, dinamic=False, image_name=None, image_alpha=None, color=None, border_color=None,
+                 text="", text_color=(255, 255, 255),
+                 font_size=20, text_positioning="center"):
+        super().__init__(x, y, w, h, image_name, image_alpha, color, border_color)
         self.dinamic = dinamic
+        self.active = True
         self.down = False
         self.font_size = font_size
         self.font = pygame.font.SysFont(Button.font_family, self.font_size)
@@ -52,23 +69,37 @@ class Button(Object):
 
         self.text_alpha = 255
 
-        self.positioning = positioning
-        text_width = self.rendered_text.get_width()
-        text_height = self.rendered_text.get_height()
-        if self.positioning == "center":
-            self.text_rect = pygame.Rect(self.rect.centerx - text_width / 2, self.rect.centery - text_height / 2, text_width, text_height)
-        elif self.positioning == "left":
-            self.text_rect = pygame.Rect(self.rect.x + self.font_size / 3, self.rect.centery - text_height / 2, text_width, text_height)
-        elif self.positioning == "right":
-            self.text_rect = pygame.Rect(self.rect.x + self.rect.width - text_width - self.font_size / 3, self.rect.centery - text_height / 2, text_width, text_height)
+        self.text_positioning = text_positioning
+        self.text_rect = None
+        self.update_text_pos()
 
     def click(self):
         sound_lib.sound_effects["click"].play()
         self.down = True
 
+    def release(self):
+        self.down = False
+
+    def update_pos(self, x=None, y=None):
+        if x:
+            self.rect.x = x
+        if y:
+            self.rect.y = y
+        self.update_text_pos()
+
+    def update_text_pos(self):
+        text_width = self.rendered_text.get_width()
+        text_height = self.rendered_text.get_height()
+        if self.text_positioning == "center":
+            self.text_rect = pygame.Rect(self.rect.centerx - text_width / 2, self.rect.centery - text_height / 2, text_width, text_height)
+        elif self.text_positioning == "left":
+            self.text_rect = pygame.Rect(self.rect.x + self.font_size / 3, self.rect.centery - text_height / 2, text_width, text_height)
+        elif self.text_positioning == "right":
+            self.text_rect = pygame.Rect(self.rect.x + self.rect.width - text_width - self.font_size / 3, self.rect.centery - text_height / 2, text_width, text_height)
+
     def update_text(self, new_text=None, new_color=None, new_font_size=None):
         new_data = False
-        if new_text and new_text != self.text:
+        if new_text is not None and new_text != self.text:
             new_data = True
             self.text = new_text
         if new_color and new_color != self.text_color:
@@ -92,17 +123,7 @@ class Button(Object):
             self.highlighted_rendered_text = self.font.render(self.text, True, self.text_highlight_color)
         self.dark_rendered_text = self.font.render(self.text, True, self.text_dark_color)
 
-        text_width = self.rendered_text.get_width()
-        text_height = self.rendered_text.get_height()
-        if self.positioning == "center":
-            self.text_rect = pygame.Rect(self.rect.centerx - text_width / 2, self.rect.centery - text_height / 2,
-                                         text_width, text_height)
-        elif self.positioning == "left":
-            self.text_rect = pygame.Rect(self.rect.x + self.font_size / 3, self.rect.centery - text_height / 2,
-                                         text_width, text_height)
-        elif self.positioning == "right":
-            self.text_rect = pygame.Rect(self.rect.x + self.rect.width - text_width - self.font_size / 3,
-                                         self.rect.centery - text_height / 2, text_width, text_height)
+        self.update_text_pos()
 
     def draw(self, SCREEN, y_scroll=0, rect_highlight=False, text_highlight=False, dark=False):
         rect = self.rect.copy()
@@ -111,8 +132,11 @@ class Button(Object):
             pygame.draw.rect(SCREEN, self.dark_color, rect)
         elif rect_highlight:
             pygame.draw.rect(SCREEN, self.highlighted_color, rect)
-        elif self.color:
+
+        if self.color:
             pygame.draw.rect(SCREEN, self.color, rect)
+        elif self.image_name:
+            SCREEN.blit(self.image, rect)
 
         if self.modified:
             pygame.draw.rect(SCREEN, Object.modified_color, rect, width=2)
@@ -134,25 +158,18 @@ class Button(Object):
 
 
 class Dropdown(Button):
-    def __init__(self, x, y, w, h, choices, text, dinamic=False, color=None, border_color=None, text_color=(255, 255, 255),
-                 font_size=20, positioning="center", dropdown_area_color=(0,0,255)):
-        super().__init__(x, y, w, h, dinamic, color, border_color, text, text_color, font_size, positioning)
+    def __init__(self, x, y, w, h, choices, text, dinamic=False, image_name=None, image_alpha=None,
+                 color=None, border_color=None, text_color=(255, 255, 255),
+                 font_size=20, text_positioning="center", dropdown_area_color=(0,0,255)):
+        super().__init__(x, y, w, h, dinamic, image_name, image_alpha,
+                         color, border_color, text, text_color, font_size, text_positioning)
+        self.active = True
         self.choices = choices
         self.diff = 0  # difference between dropdown menu lines
         self.dropdown_area = None
         self.rendered_text = self.font.render(self.text, True, self.text_color)
 
-        text_width = self.rendered_text.get_width()
-        text_height = self.rendered_text.get_height()
-        if self.positioning == "center":
-            self.text_rect = pygame.Rect(self.rect.centerx - text_width / 2, self.rect.centery - text_height / 2,
-                                         text_width, text_height)
-        elif self.positioning == "left":
-            self.text_rect = pygame.Rect(self.rect.x + self.font_size / 3, self.rect.centery - text_height / 2,
-                                         text_width, text_height)
-        elif self.positioning == "right":
-            self.text_rect = pygame.Rect(self.rect.x + self.rect.width - text_width - self.font_size / 3,
-                                         self.rect.centery - text_height / 2, text_width, text_height)
+        self.update_text_pos()
 
         self.dropdown_active = False
         self.dropdown_area_color = dropdown_area_color
@@ -175,7 +192,7 @@ class Dropdown(Button):
             rect.y += (i + 1) * rect.h + i * self.diff
             self.dropdown_objects.append(Button(
                 rect.centerx, rect.centery, rect.w, rect.h, color=self.color, text=choice, font_size=self.font_size,
-                positioning=self.positioning))
+                text_positioning=self.text_positioning))
 
     def collision(self, mouse_pos):
         self.dropdown_active = False
@@ -196,9 +213,11 @@ class Dropdown(Button):
 
 
 class Bar(Object):
-    def __init__(self, x, y, w, h, dinamic=True, color=None, border_color=None, background_color=None, grid_color=None,
+    def __init__(self, x, y, w, h, dinamic=True, image_name=None, image_alpha=None,
+                 color=None, border_color=None, background_color=None, grid_color=None,
                  max_level=10, level=1):
-        super().__init__(x, y, w, h, color, border_color)
+        super().__init__(x, y, w, h, image_name, image_alpha, color, border_color)
+        self.active = True
         self.dinamic = dinamic
         self.down = False
         self.max_level = max_level + 1

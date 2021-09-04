@@ -1,3 +1,4 @@
+import sys
 import pygame
 from settings import Settings
 from ui import UI
@@ -7,8 +8,10 @@ from menus.options_menu import options_menu
 from menus.display_menu import display_menu
 from menus.audio_menu import audio_menu
 from menus.control_menu import control_menu
-from exit import exit_program
+from program_data import ProgramData
 
+# client_data.width = pyautogui.size().width
+# client_data.height = pyautogui.size().height
 
 # known bugs:
 #   As of pygame 2.0 switching between fullscreen and window mode will put the window to the topleft corner.
@@ -21,6 +24,9 @@ if __name__ == '__main__':
     pygame.display.set_caption("Menu system")
     settings = Settings()
     ui = UI(settings)
+    program_data = ProgramData()
+
+    ui.create_objects(settings)
     ui.start_mode("main menu", settings.get_resolution())
 
     clock = pygame.time.Clock()
@@ -33,13 +39,13 @@ if __name__ == '__main__':
         ui.SCREEN.fill((20, 20, 20))
 
         if ui.mode == "game":
-            game_loop(ui, settings)
+            game_loop(ui, settings, program_data)
         elif ui.mode == "main menu":
-            main_menu(ui, settings)
+            main_menu(ui, settings, program_data)
         elif ui.mode == "options":
             options_menu(ui, settings)
         elif ui.mode == "display":
-            display_menu(ui, settings)
+            display_menu(ui, settings, program_data)
         elif ui.mode == "audio":
             audio_menu(ui, settings)
         elif ui.mode == "controls":
@@ -47,6 +53,7 @@ if __name__ == '__main__':
         elif ui.mode == "other":
             control_menu(ui, settings)  # placeholder
         elif ui.mode == "exit":
-            exit_program()
+            pygame.quit()
+            sys.exit()
         else:
             print(f"Unknown ui.mode: {ui.mode}")

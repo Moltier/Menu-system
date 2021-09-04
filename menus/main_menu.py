@@ -1,7 +1,7 @@
 import pygame
 
 
-def main_menu(ui, settings):
+def main_menu(ui, settings, program_data):
     draw_main_menu(ui)
     if ui.handle_menu_transition(settings.get_resolution()):
         return
@@ -17,24 +17,20 @@ def main_menu(ui, settings):
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:  # Left
-                if ui.menus["main menu"].objects["new game"].rect.collidepoint(mouse_pos):
-                    ui.menus["main menu"].objects["new game"].click()
-                elif ui.menus["main menu"].objects["options"].rect.collidepoint(mouse_pos):
-                    ui.menus["main menu"].objects["options"].click()
-                elif ui.menus["main menu"].objects["exit"].rect.collidepoint(mouse_pos):
-                    ui.menus["main menu"].objects["exit"].click()
+                for obj in ui.menus["main menu"].objects.values():
+                    if obj.collidepoint(mouse_pos):
+                        obj.click()
+                        return
 
         elif event.type == pygame.MOUSEBUTTONUP:
             if event.button == 1:  # Left
                 if ui.menus["main menu"].objects["new game"].rect.collidepoint(mouse_pos):
                     if ui.menus["main menu"].objects["new game"].down:
-                        ui.menus["main menu"].objects["new game"].down = False
                         ui.next_mode = "game"
                         ui.start_transition_timer()
 
                 elif ui.menus["main menu"].objects["options"].rect.collidepoint(mouse_pos):
                     if ui.menus["main menu"].objects["options"].down:
-                        ui.menus["main menu"].objects["options"].down = False
                         ui.next_mode = "options"
                         ui.start_transition_timer()
 
@@ -42,9 +38,8 @@ def main_menu(ui, settings):
                     if ui.menus["main menu"].objects["exit"].down:
                         ui.mode = "exit"
 
-                ui.menus["main menu"].objects["new game"].down = False
-                ui.menus["main menu"].objects["options"].down = False
-                ui.menus["main menu"].objects["exit"].down = False
+                for obj in ui.menus["main menu"].objects.values():
+                    obj.release()
 
 
 def draw_main_menu(ui):

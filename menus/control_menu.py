@@ -26,11 +26,11 @@ def control_menu(ui, settings):
             if event.button == 1:  # Left
                 if ui.menus["other"].objects["back"].rect.collidepoint(mouse_pos):
                     if ui.menus["other"].objects["back"].down:
-                        ui.menus["other"].objects["back"].down = False
                         ui.next_mode = "options"
                         ui.start_transition_timer()
 
-                ui.menus["other"].objects["back"].down = False
+                for obj in ui.menus["other"].objects.values():
+                    obj.release()
 
 
 def draw_control_menu(ui):

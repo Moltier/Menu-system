@@ -38,18 +38,21 @@ class Menu:
 
             if parameter["type"] == "object":
                 self.objects[parameter["name"]] = Object(
-                    x, y, self.w, self.h, color=self.color, border_color=self.border_color)
+                    x, y, self.w, self.h, color=self.color, border_color=self.border_color,
+                    image_name=parameter["image name"], image_alpha=parameter["image alpha"])
 
             elif parameter["type"] == "text":
                 self.objects[parameter["name"]] = Button(
                     x, y, self.w, self.h, text_color=self.text_color,
-                    text=parameter["string"], font_size=self.font_size, positioning=self.text_positioning)
+                    text=parameter["string"], font_size=self.font_size, text_positioning=self.text_positioning,
+                    image_name=parameter["image name"], image_alpha=parameter["image alpha"])
 
             elif parameter["type"] == "button":
                 self.objects[parameter["name"]] = Button(
                     x, y, self.w, self.h, dinamic=self.dinamic,
                     color=self.color, border_color=self.border_color, text_color=self.text_color,
-                    text=parameter["string"], font_size=self.font_size, positioning=self.text_positioning)
+                    text=parameter["string"], font_size=self.font_size, text_positioning=self.text_positioning,
+                    image_name=parameter["image name"], image_alpha=parameter["image alpha"])
 
             elif parameter["type"] == "dropdown":
                 self.objects[parameter["name"]] = Dropdown(
@@ -57,7 +60,7 @@ class Menu:
                     text_color=self.text_color, dropdown_area_color=self.dropdown_area_color,
                     text=parameter["string"],
                     choices=parameter["choices"],
-                    font_size=self.font_size, positioning="left")
+                    font_size=self.font_size, text_positioning="left")
 
             elif parameter["type"] == "bar":
                 self.objects[parameter["name"]] = Bar(

@@ -1,8 +1,8 @@
 import pygame
 
 
-def game_loop(ui, settings):
-    draw_game(ui)
+def game_loop(ui, settings, program_data):
+    draw_game(ui, program_data)
     if ui.handle_menu_transition(settings.get_resolution()):
         return
     mouse_pos = pygame.mouse.get_pos()
@@ -13,27 +13,25 @@ def game_loop(ui, settings):
 
         elif event.type == pygame.KEYUP:
             if event.key == pygame.K_ESCAPE:
-                ui.update_background_img("galaxy", settings.get_resolution())
-                ui.mode = "pause"
+                ui.mode = "main menu"
+                ui.start_transition_timer()
+                # should bring up a sub menu. Basically the options menu, but inside the game loop.
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:  # Left
-                if ui.menus["other"].objects["back"].rect.collidepoint(mouse_pos):
-                    ui.menus["other"].objects["back"].click()
+                pass
+                # if ui.menus[program_data.status].objects["ready"].rect.collidepoint(mouse_pos):
+                #     ui.menus[program_data.status].objects["ready"].click()
 
         elif event.type == pygame.MOUSEBUTTONUP:
             if event.button == 1:  # Left
-                if ui.menus["other"].objects["back"].rect.collidepoint(mouse_pos):
-                    if ui.menus["other"].objects["back"].down:
-                        ui.menus["other"].objects["back"].down = False
-                        ui.next_mode = "main menu"
-                        ui.start_transition_timer()
+                pass
+                # if ui.menus["placeholder"].objects["placeholder"].rect.collidepoint(mouse_pos):
+                #     ui.status = "exiting"
 
-                ui.menus["other"].objects["back"].down = False
+                # for obj in ui.menus["placeholder"].objects.values():
+                #     obj.release()
 
 
-def draw_game(ui):
+def draw_game(ui, program_data):
     ui.SCREEN.blit(ui.background_img, (0, 0))
-
-    for button in ui.menus["other"].objects.values():
-        button.draw(ui.SCREEN)

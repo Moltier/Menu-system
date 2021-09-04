@@ -6,7 +6,7 @@ class Settings:
 
     def_vertical_sync = "True"
     def_framerate = "60"
-    def_text_size = "100%"
+    def_general_text_size = "100%"
 
     def_music_volume = "6"
     def_sound_volume = "6"
@@ -17,12 +17,12 @@ class Settings:
         # self.grid_proportion = 100
         self.prev_full_screen = None
         self.prev_resolution = None
-        self.prev_text_size = None
+        self.prev_general_text_size = None
         self.full_screen = None
         self.resolution = None
         self.vertical_sync = None  # doesnt do anything atm
         self.framerate = None
-        self.text_size = None
+        self.general_text_size = None
 
         # Audio
         self.music_volume = None
@@ -51,14 +51,15 @@ class Settings:
     def get_resolution(self):
         return [int(x) for x in self.resolution.split('x')]
 
-    def get_font_multiplier(self):
-        return int(self.text_size[:-1])
+    def get_font_multiplier(self, type):
+        if type == "general":
+            return int(self.general_text_size[:-1])
 
     def reset_to_default(self, options_menu):
         if options_menu == "display":
             self.vertical_sync = Settings.def_vertical_sync
             self.framerate = Settings.def_framerate
-            self.text_size = Settings.def_text_size
+            self.general_text_size = Settings.def_general_text_size
         elif options_menu == "audio":
             self.music_volume = Settings.def_music_volume
             self.sound_volume = Settings.def_sound_volume
@@ -80,8 +81,8 @@ class Settings:
             self.vertical_sync = value
         elif name == "Framerate":
             self.framerate = value
-        elif name == "Text size":
-            self.text_size = value
+        elif name == "General text size":
+            self.general_text_size = value
 
         elif name == "Music volume":
             self.music_volume = value
@@ -93,5 +94,5 @@ class Settings:
             self.prev_full_screen = value
         elif name == "Resolution":
             self.prev_resolution = value
-        elif name == "Text size":
-            self.prev_text_size = value
+        elif name == "Gereral text size":
+            self.prev_general_text_size = value

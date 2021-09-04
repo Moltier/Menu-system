@@ -22,53 +22,39 @@ def options_menu(ui, settings):
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:  # Left
-                if ui.menus["options"].objects["display"].rect.collidepoint(mouse_pos):
-                    ui.menus["options"].objects["display"].click()
-                elif ui.menus["options"].objects["audio"].rect.collidepoint(mouse_pos):
-                    ui.menus["options"].objects["audio"].click()
-                elif ui.menus["options"].objects["controls"].rect.collidepoint(mouse_pos):
-                    ui.menus["options"].objects["controls"].click()
-                elif ui.menus["options"].objects["other"].rect.collidepoint(mouse_pos):
-                    ui.menus["options"].objects["other"].click()
-                elif ui.menus["options"].objects["back"].rect.collidepoint(mouse_pos):
-                    ui.menus["options"].objects["back"].click()
+                for obj in ui.menus["options"].objects.values():
+                    if obj.collidepoint(mouse_pos):
+                        obj.click()
+                        return
 
         elif event.type == pygame.MOUSEBUTTONUP:
             if event.button == 1:  # Left
                 if ui.menus["options"].objects["display"].rect.collidepoint(mouse_pos):
                     if ui.menus["options"].objects["display"].down:
-                        ui.menus["options"].objects["display"].down = False
                         ui.next_mode = "display"
                         ui.start_transition_timer()
                 elif ui.menus["options"].objects["audio"].rect.collidepoint(mouse_pos):
                     if ui.menus["options"].objects["audio"].down:
-                        ui.menus["options"].objects["audio"].down = False
                         ui.next_mode = "audio"
                         ui.start_transition_timer()
                 elif ui.menus["options"].objects["controls"].rect.collidepoint(mouse_pos):
                     if ui.menus["options"].objects["controls"].down:
-                        ui.menus["options"].objects["controls"].down = False
                         ui.next_mode = "controls"
                         ui.start_transition_timer()
                 elif ui.menus["options"].objects["other"].rect.collidepoint(mouse_pos):
                     if ui.menus["options"].objects["other"].down:
-                        ui.menus["options"].objects["other"].down = False
                         ui.next_mode = "other"
                         ui.start_transition_timer()
                 elif ui.menus["options"].objects["back"].rect.collidepoint(mouse_pos):
                     if ui.menus["options"].objects["back"].down:
-                        ui.menus["options"].objects["back"].down = False
                         if ui.game_is_running:
                             ui.mode = "pause"
                         else:
                             ui.next_mode = "main menu"
                             ui.start_transition_timer()
 
-                ui.menus["options"].objects["display"].down = False
-                ui.menus["options"].objects["audio"].down = False
-                ui.menus["options"].objects["controls"].down = False
-                ui.menus["options"].objects["other"].down = False
-                ui.menus["options"].objects["back"].down = False
+                for obj in ui.menus["options"].objects.values():
+                    obj.release()
 
 
 def draw_options_menu(ui):
