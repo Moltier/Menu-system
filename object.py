@@ -233,6 +233,9 @@ class Bar(Object):
         sound_lib.sound_effects["click"].play()
         self.down = True
 
+    def release(self):
+        self.down = False
+
     def set_bar_size(self, x):
         new_level = int(self.max_level / self.background_rect.w * (x - self.background_rect.x)) + 1
         self.update_level(new_level)

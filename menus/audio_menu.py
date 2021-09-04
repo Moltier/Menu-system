@@ -63,6 +63,8 @@ def audio_menu(ui, settings):
                         settings.reset_to_default(ui.mode)
                         ui.update_audio_levels(settings)
 
+                for obj in ui.menus["audio menu bars"].objects.values():
+                    obj.release()
                 for obj in ui.menus["general options"].objects.values():
                     obj.release()
 

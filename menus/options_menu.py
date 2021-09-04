@@ -23,7 +23,7 @@ def options_menu(ui, settings):
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:  # Left
                 for obj in ui.menus["options"].objects.values():
-                    if obj.collidepoint(mouse_pos):
+                    if obj.rect.collidepoint(mouse_pos):
                         obj.click()
                         return
 

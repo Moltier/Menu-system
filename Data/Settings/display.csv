@@ -1,5 +1,5 @@
 Full screen,False
 Resolution,1280x800
-Vertical sync,False
+Vertical sync,True
 Framerate,60
-Text size,80%
+General text size,80%
