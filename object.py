@@ -31,15 +31,15 @@ class Object:
     def draw(self, SCREEN, y_scroll=0, rect_highlight=False, dark=False):
         rect = self.rect.copy()
         rect.y += y_scroll
-        if dark:
+        
+        if self.image_name:
+            SCREEN.blit(self.image, rect)
+        elif dark:
             pygame.draw.rect(SCREEN, self.dark_color, rect)
         elif rect_highlight:
             pygame.draw.rect(SCREEN, self.highlighted_color, rect)
-
-        if self.color:
+        elif self.color:
             pygame.draw.rect(SCREEN, self.color, rect)
-        elif self.image_name:
-            SCREEN.blit(self.image, rect)
 
         if self.modified:
             pygame.draw.rect(SCREEN, Object.modified_color, rect, width=2)
@@ -128,15 +128,15 @@ class Button(Object):
     def draw(self, SCREEN, y_scroll=0, rect_highlight=False, text_highlight=False, dark=False):
         rect = self.rect.copy()
         rect.y += y_scroll
-        if dark:
+
+        if self.image_name:
+            SCREEN.blit(self.image, rect)
+        elif dark:
             pygame.draw.rect(SCREEN, self.dark_color, rect)
         elif rect_highlight:
             pygame.draw.rect(SCREEN, self.highlighted_color, rect)
-
-        if self.color:
+        elif self.color:
             pygame.draw.rect(SCREEN, self.color, rect)
-        elif self.image_name:
-            SCREEN.blit(self.image, rect)
 
         if self.modified:
             pygame.draw.rect(SCREEN, Object.modified_color, rect, width=2)

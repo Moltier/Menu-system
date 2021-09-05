@@ -68,7 +68,7 @@ def display_menu(ui, settings, client_data):
                             if settings.prev_full_screen != settings.full_screen or settings.prev_resolution != settings.resolution:
                                 ui.set_screen_mode(settings)
                                 if settings.prev_resolution != settings.resolution:
-                                    ui.create_objects(settings, client_data)
+                                    ui.create_objects(settings)
                                     settings.prev_resolution = settings.resolution
                                 settings.prev_full_screen = settings.full_screen
 
